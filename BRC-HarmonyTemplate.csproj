@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--
+      These variables tell compiler where to find assemblies (dlls)
+
+      If you have already set the community-standard $BRCPath environment variable, it will take precedence.
+
+      To make it easy(?) for you, these variables attempt to auto-detect several possible install locations for
+      BRC and BepInEx / Thunderstore.
+      If this is all too confusing or annoying, you can always ignore these variables and edit the <HintPath>s instead.
+    -->
+
+    <!--
+      Bomb Rush Cyberfunk install directory from Steam or elsewhere.
+      Only one of these needs to be correct, we check all 3 to see which one exists.
+    -->
+    <BRCInstallDirectoryA>C:\Program Files (x86)\Steam\steamapps\common\BombRushCyberfunk</BRCInstallDirectoryA>
+    <BRCInstallDirectoryB>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\BombRushCyberfunk</BRCInstallDirectoryB>
+    <BRCInstallDirectoryC>E:\Games\SteamLibrary\steamapps\common\BombRushCyberfunk</BRCInstallDirectoryC>
+
+    <!--
+      If you use Thunderstore, BepInEx lives in the profile directory.
+      Find yours in Thunderstore -> Settings -> "Browse profile folder"
+    -->
+    <ThunderstoreProfile>$(APPDATA)\Thunderstore Mod Manager\DataFolder\BombRushCyberfunk\profiles\Default</ThunderstoreProfile>
+
+    <!-- If you're not using Thunderstore, try setting this path to BepInEx subdirectory -->
+    <BepInExDirectoryA>PUT_PATH_HERE</BepInExDirectoryA>
+
+    <!-- ================= -->
+
+    <!-- pick the ones that actually exist on disk -->
+    <BRCInstallDirectory Condition="Exists($(BRCPath))">$(BRCPath)</BRCInstallDirectory>
+    <BRCInstallDirectory Condition="Exists($(BRCInstallDirectoryA))">$(BRCInstallDirectoryA)</BRCInstallDirectory>
+    <BRCInstallDirectory Condition="Exists($(BRCInstallDirectoryB))">$(BRCInstallDirectoryB)</BRCInstallDirectory>
+    <BRCInstallDirectory Condition="Exists($(BRCInstallDirectoryC))">$(BRCInstallDirectoryC)</BRCInstallDirectory>
+
+    <BepInExDirectory Condition="Exists('$(BRCPath)/BepInEx')">$(BRCPath)\BepInEx</BepInExDirectory>
+    <BepInExDirectory Condition="Exists('$(ThunderstoreProfile)/BepInEx')">$(ThunderstoreProfile)\BepInEx</BepInExDirectory>
+    <BepInExDirectory Condition="Exists($(BepInExDirectoryA))">$(BepInExDirectoryA)</BepInExDirectory>
+
+    <!-- See also: https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-properties?view=vs-2022#define-and-reference-properties-in-a-project-file -->
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{$guid1$}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SafeProjectName</RootNamespace>
+    <AssemblyName>SafeProjectName</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExDirectory)\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(BRCInstallDirectory)\Bomb Rush Cyberfunk_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_publicized">
+      <HintPath>$(BRCInstallDirectory)\Bomb Rush Cyberfunk_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExDirectory)\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>$(BRCInstallDirectory)\Bomb Rush Cyberfunk_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(BRCInstallDirectory)\Bomb Rush Cyberfunk_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Patches\Player.cs" />
+    <Compile Include="MyPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+      mkdir "$(BepInExDirectory)\plugins\$(TargetName)"
+xcopy /q/y/i "$(TargetPath)" "$(BepInExDirectory)\plugins\$(TargetName)" /E /H /C
+$(SolutionDir)\scripts\pdb2mdb.exe "$(TargetPath)"
+xcopy /q/y/i "$(TargetPath).mdb" "$(BepInExDirectory)\plugins\$(TargetName)" /E /H /C
+    </PostBuildEvent>
+  </PropertyGroup>
+
+  <!-- Shell scripts use these targets to get variables -->
+  <Target Name="LogBRCInstallDirectory">
+    <Message Text="$(BRCInstallDirectory)" Importance="High" />
+  </Target>
+  <Target Name="LogBepInExDirectory">
+    <Message Text="$(BepInExDirectory)" Importance="High" />
+  </Target>
+</Project>

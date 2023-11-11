@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "motivesoft.vscode-uuid-generator",
+        "ms-dotnettools.csharp",
+    ]
+}
