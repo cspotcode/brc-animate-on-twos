@@ -1,0 +1,9 @@
+{
+    "name": "AnimateOnTwos",
+    "description": "Mod that makes players and pedestrians animate on twos, as popularized by the SpiderVerse movies.",
+    "version_number": "0.0.2",
+    "website_url": "https://github.com/cspotcode/brc-animate-on-twos",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}

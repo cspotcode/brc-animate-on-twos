@@ -130,4 +130,7 @@ xcopy /q/y/i "$(TargetPath).mdb" "$(BepInExDirectory)\plugins\$(TargetName)" /E 
   <Target Name="LogBepInExDirectory">
     <Message Text="$(BepInExDirectory)" Importance="High" />
   </Target>
+  <Target Name="LogTargetPath">
+    <Message Text="$(TargetPath)" Importance="High" />
+  </Target>
 </Project>
